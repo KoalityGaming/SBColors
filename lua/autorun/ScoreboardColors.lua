@@ -2,14 +2,16 @@ if SERVER then
 	-- when the server loads this script, tell it to send it to clients
 	AddCSLuaFile("ScoreboardColors.lua")
 else
--- when a client runs it, add the hook
+	--Keep track of players with custom colors
+	local colors = {}
+
 	function ScoreboardColor(ply)
 
 		--Get a custom color
-		if ply:GetPData("scoreboard_red") then
-			red = tonumber(ply:GetPData("scoreboard_red"))
-			green = tonumber(ply:GetPData("scoreboard_green"))
-			blue = tonumber(ply:GetPData("scoreboard_blue"))
+		if colors[ply:SteamID()] then
+			red = tonumber(colors[ply:SteamID()][1])
+			green = tonumber(colors[ply:SteamID()][2])
+			blue = tonumber(colors[ply:SteamID()][3])
 			
 			return Color(red, green, blue)
 		end
@@ -33,21 +35,18 @@ else
 			red = net.ReadUInt(8)
 			green = net.ReadUInt(8)
 			blue = net.ReadUInt(8)
+			print("Hello world")
 			
 			
-			p = nil
 			for _,v in pairs(player.GetAll()) do
 				if steamid == v:SteamID() then
-					p = v
+					colors[steamid] = {red, green, blue}
+					print(colors[steamid][1])
 					break
 				end
 			end
 			
-			if p then
-				p:SetPData("scoreboard_red", red)
-				p:SetPData("scoreboard_green", green)
-				p:SetPData("scoreboard_blue", blue)
-			end
+
 		end
 	)
 	
