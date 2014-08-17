@@ -37,8 +37,8 @@ givecolor:addParam{ type=ULib.cmds.PlayerArg, hint="Target" }
 givecolor:addParam{type = ULib.cmds.NumArg, min=0, max=255, hint="red"}
 givecolor:addParam{type = ULib.cmds.NumArg, min=0, max=255, hint="green"}
 givecolor:addParam{type = ULib.cmds.NumArg, min=0, max=255, hint="blue"}
-givecolor:defaultAccess( ULib.ACCESS_ADMIN )
-givecolor:help( "Sets your scoreboard color to an r,g,b color code." )
+givecolor:defaultAccess( ULib.ACCESS_SUPERADMIN )
+givecolor:help( "Sets a players scoreboard color to an r,g,b color code." )
 
 function ulx.uncolor(calling_ply, target_ply)
 	print(target_ply:SteamID())
