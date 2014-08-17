@@ -4,8 +4,18 @@ if SERVER then
 else
 	--Keep track of players with custom colors
 	local colors = {}
+	--Sometimes a connecting player will miss the initial broadcast when they join, track if they receive "playercolor"
+	local recievedBroadcast = false
 
 	function ScoreboardColor(ply)
+	
+		--Request a rebroadcast if nothing has been recieved.
+		if not recievedBroadcast then
+			print("Requesting rebroadcast")
+			net.Start("rebroadcast")
+			net.SendToServer()
+		end
+			
 
 		--Get a custom color
 		if colors[ply:SteamID()] then
@@ -35,18 +45,17 @@ else
 			red = net.ReadUInt(8)
 			green = net.ReadUInt(8)
 			blue = net.ReadUInt(8)
-			print("Hello world")
 			
 			
 			for _,v in pairs(player.GetAll()) do
 				if steamid == v:SteamID() then
 					colors[steamid] = {red, green, blue}
-					print(colors[steamid][1])
 					break
 				end
 			end
 			
 
+			recievedBroadcast = true
 		end
 	)
 	

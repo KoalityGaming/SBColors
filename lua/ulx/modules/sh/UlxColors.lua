@@ -29,6 +29,7 @@ sbcolor:help( "Sets your scoreboard color to an r,g,b color code." )
 if SERVER then
 	util.AddNetworkString( "playercolor" )
 
+	--Send a players color out
 	function sendSinglePlayer(id, red, green, blue)
 		net.Start( "playercolor" ) 
 			net.WriteString(id)
@@ -38,17 +39,21 @@ if SERVER then
 		net.Broadcast()
 	end
 
-	function SendColors() 
-		for _,v in pairs(player.GetAll()) do
-			if v:GetPData("scoreboard_red") then
-				red = tonumber(v:GetPData("scoreboard_red"))
-				green = tonumber(v:GetPData("scoreboard_green"))
-				blue = tonumber(v:GetPData("scoreboard_blue"))
-				
-				sendSinglePlayer(v:SteamID(), red, green, blue)
+	--Send all the colors out as a rebroadcast
+	
+	util.AddNetworkString("rebroadcast")
+	net.Receive("rebroadcast", 
+		function() 
+			for _,v in pairs(player.GetAll()) do
+				if v:GetPData("scoreboard_red") then
+					red = tonumber(v:GetPData("scoreboard_red"))
+					green = tonumber(v:GetPData("scoreboard_green"))
+					blue = tonumber(v:GetPData("scoreboard_blue"))
+					
+					sendSinglePlayer(v:SteamID(), red, green, blue)
+				end
 			end
 		end
-	end
+	)
 
-	hook.Add( "PlayerInitialSpawn", "colorAlert", SendColors )
 end
