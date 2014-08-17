@@ -46,14 +46,7 @@ else
 			blue = net.ReadUInt(8)
 			
 			
-			for _,v in pairs(player.GetAll()) do
-				if steamid == v:SteamID() then
-					colors[steamid] = {red, green, blue}
-					break
-				end
-			end
-			
-
+			colors[steamid] = {red, green, blue}
 			recievedBroadcast = true
 		end
 	)
