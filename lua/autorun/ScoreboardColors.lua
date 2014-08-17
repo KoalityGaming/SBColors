@@ -11,7 +11,6 @@ else
 	
 		--Request a rebroadcast if nothing has been recieved.
 		if not recievedBroadcast then
-			print("Requesting rebroadcast")
 			net.Start("rebroadcast")
 			net.SendToServer()
 		end
@@ -56,6 +55,13 @@ else
 			
 
 			recievedBroadcast = true
+		end
+	)
+	
+	net.Receive("removecolor",
+		function()
+			steamid = net.ReadString()
+			colors[steamid] = nil
 		end
 	)
 	
