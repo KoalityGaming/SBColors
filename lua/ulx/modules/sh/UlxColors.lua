@@ -61,7 +61,7 @@ function ulx.ungroupcolor(calling_ply, group_name)
 	
 end
 local ungroupcolor =  ulx.command("Scoreboard Colors", "ulx ungroupcolor", ulx.ungroupcolor, "!ungroupcolor")
-ungroupcolor:addParam{ type=ULib.cmds.StringArg, completes=ulx.group_names_no_user, hint="Group", error="invalid group \"%s\" specified", ULib.cmds.restrictToCompletes }
+ungroupcolor:addParam{ type=ULib.cmds.StringArg, completes=ulx.group_names, hint="group", error="invalid group \"%s\" specified", ULib.cmds.restrictToCompletes }
 ungroupcolor:defaultAccess( ULib.ACCESS_SUPERADMIN )
 ungroupcolor:help( "Removes a groups scoreboard color." )
 
@@ -70,7 +70,7 @@ function ulx.groupcolor(calling_ply, group_name, red, green, blue)
 	sendGroupColor(group_name, red, green, blue)
 end
 local groupcolor = ulx.command("Scoreboard Colors", "ulx groupcolor", ulx.groupcolor, "!groupcolor")
-groupcolor:addParam{ type=ULib.cmds.StringArg, completes=ulx.group_names_no_user, hint="group", error="invalid group \"%s\" specified", ULib.cmds.restrictToCompletes }
+groupcolor:addParam{ type=ULib.cmds.StringArg, completes=ulx.group_names, hint="group", error="invalid group \"%s\" specified", ULib.cmds.restrictToCompletes }
 groupcolor:addParam{type = ULib.cmds.NumArg, min=0, max=255, hint="red"}
 groupcolor:addParam{type = ULib.cmds.NumArg, min=0, max=255, hint="green"}
 groupcolor:addParam{type = ULib.cmds.NumArg, min=0, max=255, hint="blue"}
