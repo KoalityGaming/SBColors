@@ -1,37 +1,48 @@
 if SERVER then
 	-- when the server loads this script, tell it to send it to clients
 	AddCSLuaFile("ScoreboardColors.lua")
+	util.AddNetworkString("rebroadcast")
 else
 	--Keep track of players with custom colors
-	local colors = {}
+	local playerColors = {}
+	--Keep track of group colors
+	local groupColors = {}
 	--Sometimes a connecting player will miss the initial broadcast when they join, track if they receive "playercolor"
-	local recievedBroadcast = false
+	local receivedUserBroadcast = false
+	local receivedGroupBroadcast = false
 
 	function ScoreboardColor(ply)
 	
-		--Request a rebroadcast if nothing has been recieved.
-		if not recievedBroadcast then
-			net.Start("rebroadcast")
+		--Request a rebroadcast if no users have been received.
+		if not receivedUserBroadcast then
+			net.Start("rebroadcast_users")
+			net.SendToServer()
+		end
+		
+		--Request a rebroadcast if no groups have been received
+		if not receivedGroupBroadcast then
+			net.Start("rebroadcast_groups")
 			net.SendToServer()
 		end
 			
 
 		--Get a custom color
-		if colors[ply:SteamID()] then
-			red = tonumber(colors[ply:SteamID()][1])
-			green = tonumber(colors[ply:SteamID()][2])
-			blue = tonumber(colors[ply:SteamID()][3])
+		if playerColors[ply:SteamID()] then
+			red = tonumber(playerColors[ply:SteamID()][1])
+			green = tonumber(playerColors[ply:SteamID()][2])
+			blue = tonumber(playerColors[ply:SteamID()][3])
 			
 			return Color(red, green, blue)
 		end
-
-
-		-- Admins 
-		if ply:IsUserGroup("admin") then
-			return Color(205,55,230)
-		-- Moderator
-		elseif ply:IsUserGroup("moderator") then
-			return Color(238,255,46)
+		
+		--Get a group color (if no custom player color)
+		if groupColors[ply:GetUserGroup()] then
+			group = ply:GetUserGroup()
+			red = tonumber(groupColors[group][1])
+			green = tonumber(groupColors[group][2])
+			blue = tonumber(groupColors[group][3])
+			
+			return Color(red, green, blue)
 		end
 
 
@@ -46,15 +57,35 @@ else
 			blue = net.ReadUInt(8)
 			
 			
-			colors[steamid] = {red, green, blue}
-			recievedBroadcast = true
+			playerColors[steamid] = {red, green, blue}
+			receivedUserBroadcast = true
 		end
 	)
+	
 	
 	net.Receive("removecolor",
 		function()
 			steamid = net.ReadString()
-			colors[steamid] = nil
+			playerColors[steamid] = nil
+		end
+	)
+	
+	net.Receive("removegroupcolor",
+		function()
+			group_name = net.ReadString()
+			groupColors[group_name] = nil
+		end
+	)
+	
+	net.Receive("groupcolor",
+		function()
+			group_name = net.ReadString()
+			red = tonumber(net.ReadUInt(8))
+			green = tonumber(net.ReadUInt(8))
+			blue = tonumber(net.ReadUInt(8))
+			
+			groupColors[group_name] = {red, green, blue}
+			receivedGroupBroadcast = true
 		end
 	)
 	
