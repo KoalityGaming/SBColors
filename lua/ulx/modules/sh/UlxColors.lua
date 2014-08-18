@@ -58,6 +58,7 @@ uncolor:help( "Removes someone's scoreboard color." )
 
 function ulx.ungroupcolor(calling_ply, group_name)
 	removeGroupColor(group_name)
+	message = "#A removed the scoreboard color from #T"
 	
 end
 local ungroupcolor =  ulx.command("Scoreboard Colors", "ulx ungroupcolor", ulx.ungroupcolor, "!ungroupcolor")
