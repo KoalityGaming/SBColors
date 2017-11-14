@@ -2,6 +2,8 @@ if SERVER then
 	-- when the server loads this script, tell it to send it to clients
 	AddCSLuaFile("ScoreboardColors.lua")
 	util.AddNetworkString("rebroadcast")
+	util.AddNetworkString("rebroadcast_users")
+	util.AddNetworkString("rebroadcast_groups")
 else
 	--Keep track of players with custom colors
 	local playerColors = {}
